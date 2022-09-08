@@ -11,7 +11,6 @@ export type CurrentUserType = {
 } | null
 
 interface AppContextInterface {
-  // theme: Theme;
   currentMode: PaletteMode
   toggleColorMode: () => void
   setCurrentMode: (inputMode: PaletteMode) => void
@@ -24,7 +23,9 @@ interface AppContextInterface {
   loggedIn: boolean
   setLoggedIn: (inputLoggedIn: boolean) => void
   currentUser: CurrentUserType
-  setCurrentUser: (inputCurrentUser: CurrentUserType) => void
+  setCurrentUser: (inputCurrentUser: any) => void
+  userToken: string
+  setUserToken: (inputToken: string) => void
 }
 
 const AppContextInitialState = {
@@ -55,6 +56,10 @@ const AppContextInitialState = {
   setCurrentUser: () => {
     // nothing here!
   },
+  userToken: "",
+  setUserToken: () => {
+    // nothing here!
+  },
 }
 
 export const AppContext = createContext<AppContextInterface>(
@@ -68,6 +73,7 @@ const AppContextProvider = ({ children }: any) => {
   const [verificationId, setVerificationId] = useState<string>('')
   const [loggedIn, setLoggedIn] = useState<boolean>(false)
   const [currentUser, setCurrentUser] = useState<CurrentUserType>(null)
+  const [userToken, setUserToken] = useState('')
 
   const handleSetCurrentUser = (inputCurrentUser: CurrentUserType) =>
     setCurrentUser(inputCurrentUser)
@@ -98,6 +104,8 @@ const AppContextProvider = ({ children }: any) => {
         setLoggedIn,
         currentUser,
         setCurrentUser: handleSetCurrentUser,
+        userToken,
+        setUserToken,
       }}
     >
       {children}
