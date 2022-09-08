@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo } from 'react'
+import { useContext, useEffect, useMemo, useState } from 'react'
 import type { AppProps } from 'next/app'
 import AppContextProvider, { AppContext } from '../src/context/appContext'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
@@ -12,8 +12,13 @@ import Container from '@mui/material/Container'
 import { getLocalStorageData } from '../src/utils/manageLocalStorage'
 
 const CustomAppContent = ({ Component, pageProps }: AppProps) => {
-  const { setLoggedIn, setCurrentUser, setCurrentMode, currentMode } =
-    useContext(AppContext)
+  const {
+    setLoggedIn,
+    setCurrentUser,
+    setCurrentMode,
+    currentMode,
+    setUserToken,
+  } = useContext(AppContext)
   const router = useRouter()
 
   const currentTheme = useMemo(() => {
@@ -29,28 +34,26 @@ const CustomAppContent = ({ Component, pageProps }: AppProps) => {
     const auth = getAuth(initializedApp)
     onAuthStateChanged(auth, async (user) => {
       if (user) {
-        console.log(`user is signed in!`)
-
         const userJwtToken = await getIdToken(user)
         const userIdFromFirebase = user.uid
         const userPhoneNumberFromFirebase = user.phoneNumber
 
-        window.userJwtToken = userJwtToken
+        setUserToken(userJwtToken)
 
         let userInfo: any = {
           userId: userIdFromFirebase,
           phoneNumber: userPhoneNumberFromFirebase,
         }
 
-        const response = await(
+        const response = await (
           await fetch(
             `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/${userIdFromFirebase}`,
             {
               headers: {
-                Authorization: `Bearer ${window.userJwtToken}`,
+                Authorization: `Bearer ${userJwtToken}`,
               },
             },
-          ),
+          )
         ).json()
         if (response.id) {
           const { id, name, email } = response
@@ -64,7 +67,6 @@ const CustomAppContent = ({ Component, pageProps }: AppProps) => {
           router.push('/profile')
         }
       } else {
-        console.log(`user is signed out!`)
         setLoggedIn(false)
         router.push('/')
       }
@@ -96,6 +98,10 @@ const CustomApp = (props: AppProps) => {
       <CustomAppContent {...props} />
     </AppContextProvider>
   )
+}
+
+CustomApp.getInitialProps = async () => {
+  return {}
 }
 
 export default CustomApp
