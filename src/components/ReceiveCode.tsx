@@ -28,9 +28,10 @@ const ReceiveCode = () => {
   const [helperText, setHelperText] = useState<string>('')
 
   useEffect(() => {
+    const windowContext: any = window
     setTimeout(() => {
       const auth = getAuth()
-      if (!window.recaptchaVerifier) {
+      if (!windowContext.recaptchaVerifier) {
         const newRecaptchaVerifier = new RecaptchaVerifier(
           'recaptcha-container',
           {
@@ -40,7 +41,7 @@ const ReceiveCode = () => {
           },
           auth,
         )
-        window.recaptchaVerifier = newRecaptchaVerifier
+        windowContext.recaptchaVerifier = newRecaptchaVerifier
 
         newRecaptchaVerifier.render()
       }
@@ -50,11 +51,11 @@ const ReceiveCode = () => {
   const handleClickReceiveCode = (inputPhoneNumber: string): void => {
     setHelperText('')
     setIsLoading(true)
+    const windowContext: any = window
 
     const auth = getAuth()
-    signInWithPhoneNumber(auth, inputPhoneNumber, window.recaptchaVerifier)
+    signInWithPhoneNumber(auth, inputPhoneNumber, windowContext.recaptchaVerifier)
       .then((confirmationResult: ConfirmationResult) => {
-        console.log('confirmationResult:', confirmationResult)
         setDisabled(true)
         setVerificationId(confirmationResult.verificationId)
       })
