@@ -42,12 +42,15 @@ const CustomAppContent = ({ Component, pageProps }: AppProps) => {
           phoneNumber: userPhoneNumberFromFirebase,
         }
 
-        const response = await (
-          await fetch(`http://localhost:3000/user/${userIdFromFirebase}`, {
-            headers: {
-              Authorization: `Bearer ${window.userJwtToken}`,
+        const response = await(
+          await fetch(
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/${userIdFromFirebase}`,
+            {
+              headers: {
+                Authorization: `Bearer ${window.userJwtToken}`,
+              },
             },
-          })
+          ),
         ).json()
         if (response.id) {
           const { id, name, email } = response

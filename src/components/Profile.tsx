@@ -66,8 +66,11 @@ const Profile = () => {
       },
       body: JSON.stringify(currentUser),
     }
-    const response = await (
-      await fetch('http://localhost:3000/user', requestOptions)
+    const response = await(
+      await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/user`,
+        requestOptions,
+      ),
     ).json()
 
     setIsLoading(false)
