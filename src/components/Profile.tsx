@@ -6,7 +6,8 @@ import LoadingButton from '@mui/lab/LoadingButton'
 import SaveIcon from '@mui/icons-material/Save'
 
 const Profile = () => {
-  const { currentUser, setCurrentUser, loggedIn } = useContext(AppContext)
+  const { currentUser, setCurrentUser, loggedIn, userToken } =
+    useContext(AppContext)
 
   const [nameIsValid, setNameIsValid] = useState<boolean>(false)
   const [emailIsValid, setEmailIsValid] = useState<boolean>(false)
@@ -62,15 +63,12 @@ const Profile = () => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${window.userJwtToken}`,
+        Authorization: `Bearer ${userToken}`,
       },
       body: JSON.stringify(currentUser),
     }
-    const response = await(
-      await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/user`,
-        requestOptions,
-      ),
+    await (
+      await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/user`, requestOptions)
     ).json()
 
     setIsLoading(false)

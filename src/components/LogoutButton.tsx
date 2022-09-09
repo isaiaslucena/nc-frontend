@@ -11,18 +11,19 @@ const LogoutButton = () => {
     setCountryNumber,
     setPhoneNumber,
     setVerificationId,
+    setUserToken,
   } = useContext(AppContext)
 
   const handleClickLogoutButton = () => {
     const auth = getAuth()
     signOut(auth)
       .then(() => {
-        console.log('successfully signed out!')
         setCurrentUser(null)
         setLoggedIn(false)
         setCountryNumber('')
         setPhoneNumber('')
         setVerificationId('')
+        setUserToken('')
       })
       .catch((error) => {
         console.log('signOut function error', error)

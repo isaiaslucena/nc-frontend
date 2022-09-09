@@ -34,7 +34,6 @@ const ConfirmCode = () => {
     const auth = getAuth()
     signInWithCredential(auth, credential)
       .then((response: any) => {
-        console.log('signInWithCredential response:', response)
         router.push('/profile')
       })
       .catch((error: any) => {
